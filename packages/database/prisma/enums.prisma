@@ -1,0 +1,10 @@
+enum Status {
+  pending
+  active
+  un_active
+}
+
+enum Role {
+  USER
+  ADMIN
+}

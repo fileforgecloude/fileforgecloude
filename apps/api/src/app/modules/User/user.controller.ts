@@ -1,0 +1,19 @@
+import catchAsync from "src/utils/catchAsync";
+import { UserServices } from "./user.service";
+import sendResponse from "src/utils/sendResponse";
+import httpStatus from "http-status";
+
+const getUsers = catchAsync(async (req, res) => {
+  const result = await UserServices.getUsersFormDB();
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Users retrieved successfully",
+    data: result,
+  });
+});
+
+export const UserController = {
+  getUsers,
+};
