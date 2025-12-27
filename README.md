@@ -1,4 +1,4 @@
-# My Monorepo Project
+# FileForge
 
 Welcome to the project! This is a **Monorepo** powered by **Turborepo** and **pnpm**.
 
@@ -94,17 +94,6 @@ import { Button } from "@repo/ui/components/button";
 export default function Page() {
   return <Button>Click me</Button>;
 }
-```
-
-Before you begin, make sure you have the following installed:
-
-- **Node.js** (v18 or higher)
-- **pnpm** (Package Manager)
-
-If you don't have `pnpm` installed, you can enable it with Corepack (included with Node.js):
-
-```bash
-corepack enable
 ```
 
 ## 🏁 Getting Started
