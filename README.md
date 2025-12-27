@@ -1,135 +1,182 @@
-# Turborepo starter
+# My Monorepo Project
 
-This Turborepo starter is maintained by the Turborepo core team.
+Welcome to the project! This is a **Monorepo** powered by **Turborepo** and **pnpm**.
 
-## Using this example
+This guide is designed to help you understand the structure, set up your environment, and get started with development.
 
-Run the following command:
+## 📚 What is a Monorepo?
 
-```sh
-npx create-turbo@latest
-```
+A **Monorepo** (Monolithic Repository) is a single repository that contains multiple distinct projects, with well-defined relationships.
 
-## What's inside?
+Instead of having separate repositories for the frontend (`web`), backend (`api`), and shared libraries (`ui`, `database`), we keep them all here. This allows us to:
 
-This Turborepo includes the following packages/apps:
+- Share code easily (like UI components and database types).
+- Manage dependencies in one place.
+- Refactor across the entire stack atomically.
 
-### Apps and Packages
+## 🚀 What is Turborepo?
 
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
+**Turborepo** is a high-performance build system for JavaScript and TypeScript monorepos. It handles the task running (like checking for cache hits so you don't rebuild things that haven't changed) and orchestration (running tasks in parallel).
 
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
+## 📂 Project Structure
 
-### Utilities
-
-This Turborepo has some additional tools already setup for you:
-
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
-
-### Build
-
-To build all apps and packages, run the following command:
+Here is an overview of the folder structure:
 
 ```
-cd my-turborepo
-
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo build
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo build
-yarn dlx turbo build
-pnpm exec turbo build
+file-forge/
+├── apps/
+│   ├── api/            # Backend API (Express/Node)
+│   │   ├── src/        # API source code (routes, controllers)
+│   │   └── ...
+│   └── web/            # Frontend application (Next.js)
+│       ├── src/        # React components and pages
+│       ├── public/     # Static assets
+│       └── ...
+├── packages/           # Shared libraries
+│   ├── database/       # Prisma ORM setup
+│   │   ├── prisma/     # Schema definition
+│   │   └── src/        # Generated client and seed scripts
+│   ├── eslint-config/  # Shared code linting rules
+│   ├── typescript-config/ # Shared TS compiler options
+│   └── ui/             # Design System & Shadcn Components
+│       ├── src/
+│       │   ├── components/ # Shared UI components (Button, Input, etc.)
+│       │   └── styles/     # Global CSS and Tailwind config
+│       └── ...
+├── package.json        # Root scripts (pnpm dev, build)
+├── pnpm-workspace.yaml # Defines the workspace roots
+└── turbo.json          # Turbo build pipeline config
 ```
 
-You can build a specific package by using a [filter](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters):
+## 🛠️ Prerequisites
 
-```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo build --filter=docs
+Before you begin, make sure you have the following installed:
 
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo build --filter=docs
-yarn exec turbo build --filter=docs
-pnpm exec turbo build --filter=docs
-```
+- **Node.js** (v18 or higher)
+- **pnpm** (Package Manager)
 
-### Develop
+## 🎨 UI & Design System (Shadcn + Tailwind)
 
-To develop all apps and packages, run the following command:
+Our project uses a shared UI package (`packages/ui`) that includes **Shadcn UI** components and **Tailwind CSS** configuration. This allows both the web app and potential future apps to use the same design system.
 
-```
-cd my-turborepo
+### How it works
 
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo dev
+- **Tailwind Setup**: The tailwind configuration is centralized in `packages/ui`. Apps import the global CSS from `@repo/ui/globals.css`.
+- **Component Library**: All Shadcn components (Button, Card, etc.) live in `packages/ui/src/components`.
 
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo dev
-yarn exec turbo dev
-pnpm exec turbo dev
-```
+### Installing New Components
 
-You can develop a specific package by using a [filter](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters):
+You can install new Shadcn components directly into the shared UI library.
 
-```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo dev --filter=web
+**Method 1: From `packages/ui` (Recommended)**
+Navigate to the UI package and run the add command:
 
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo dev --filter=web
-yarn exec turbo dev --filter=web
-pnpm exec turbo dev --filter=web
+```bash
+cd packages/ui
+pnpm dlx shadcn@latest add [component-name]
 ```
 
-### Remote Caching
+**Method 2: From `apps/web`**
+Since our `web` app is configured with path aliases pointing to the UI package, you can also run the command from there:
 
-> [!TIP]
-> Vercel Remote Cache is free for all plans. Get started today at [vercel.com](https://vercel.com/signup?/signup?utm_source=remote-cache-sdk&utm_campaign=free_remote_cache).
-
-Turborepo can use a technique known as [Remote Caching](https://turborepo.com/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
-
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup?utm_source=turborepo-examples), then enter the following commands:
-
-```
-cd my-turborepo
-
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo login
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo login
-yarn exec turbo login
-pnpm exec turbo login
+```bash
+cd apps/web
+pnpm dlx shadcn@latest add [component-name]
 ```
 
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
+_Note: This works because `apps/web/tsconfig.json` maps `@repo/ui/_`to`../../packages/ui/src/_`._
 
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
+After installation, the component will appear in `packages/ui/src/components` and can be imported in your app:
 
-```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo link
+```tsx
+import { Button } from "@repo/ui/components/button";
 
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo link
-yarn exec turbo link
-pnpm exec turbo link
+export default function Page() {
+  return <Button>Click me</Button>;
+}
 ```
 
-## Useful Links
+Before you begin, make sure you have the following installed:
 
-Learn more about the power of Turborepo:
+- **Node.js** (v18 or higher)
+- **pnpm** (Package Manager)
 
-- [Tasks](https://turborepo.com/docs/crafting-your-repository/running-tasks)
-- [Caching](https://turborepo.com/docs/crafting-your-repository/caching)
-- [Remote Caching](https://turborepo.com/docs/core-concepts/remote-caching)
-- [Filtering](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters)
-- [Configuration Options](https://turborepo.com/docs/reference/configuration)
-- [CLI Usage](https://turborepo.com/docs/reference/command-line-reference)
+If you don't have `pnpm` installed, you can enable it with Corepack (included with Node.js):
+
+```bash
+corepack enable
+```
+
+## 🏁 Getting Started
+
+### 1. Install Dependencies
+
+Install all dependencies for all apps and packages from the root directory:
+
+```bash
+pnpm install
+```
+
+### 2. Database Setup (Prisma)
+
+Our database configuration lives in `packages/database`. You need to generate the Prisma Client types before running the apps.
+
+```bash
+# Generate Prisma Client
+pnpm generate
+
+# Push schema changes to your database (if you have a database connection set up in .env)
+pnpm db:push
+```
+
+_Note: Make sure you have your environment variables set up (e.g., `DATABASE_URL`) in the root directory `.env.local` file._
+
+## 🏃‍♂️ Running the Project
+
+### Run Everything (Dev Mode)
+
+To start both the **Web** and **API** applications simultaneously:
+
+```bash
+pnpm dev:apps
+```
+
+This command uses Turbo to run the `dev` script in all workspaces.
+
+### Run Individual Apps
+
+If you only want to work on one part of the stack, you can filter the run command:
+
+**Run only the Web App:**
+
+```bash
+# Using pnpm filter
+pnpm --filter @repo/web dev
+```
+
+**Run only the API:**
+
+```bash
+# Using pnpm filter
+pnpm --filter @repo/api dev
+```
+
+## 📋 Common Scripts
+
+These scripts are defined in the root `package.json` and are helpful for daily tasks:
+
+| Command | Description |
+|Col1|Col2|
+| `pnpm build` | Build all apps and packages. |
+| `pnpm format` | Format code using Prettier. |
+| `pnpm clean` | Delete all `node_modules`, `.next`, and build artifacts to start fresh. |
+| `pnpm check-types` | Run TypeScript type checking. |
+
+## 🗄️ Working with Prisma (Database)
+
+Since the database is a shared package, most Prisma commands can be run from the root using Turbo or by filtering.
+
+- **Generate Client**: `pnpm generate`
+- **Push Schema**: `pnpm db:push`
+- **Migrate Deploy**: `pnpm db:migrate:deploy`
+- **Seed Database**: `pnpm db:seed`

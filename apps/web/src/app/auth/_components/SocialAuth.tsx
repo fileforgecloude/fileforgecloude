@@ -1,5 +1,5 @@
-import { Button } from "@/components/ui/button";
 import { authClient } from "@/lib/auth-client";
+import { Button } from "@repo/ui/components/button";
 import { IconBrandGithub, IconBrandGoogle } from "@tabler/icons-react";
 import { Dispatch, SetStateAction } from "react";
 
