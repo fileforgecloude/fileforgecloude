@@ -1,18 +1,15 @@
-"use client";
+import { Metadata } from "next";
+import LoginContainer from "../_components/LoginContainer";
 
-import { useSearchParams } from "next/navigation";
-import { useState } from "react";
-import SocialAuth from "../_components/SocialAuth";
+export const metadata: Metadata = {
+  title: "Welcome to File Forge",
+  description: "Login to your account",
+};
 
 const LoginPage = () => {
-  const searchParams = useSearchParams();
-  const callbackUrl = searchParams?.get("callbackUrl") || "/";
-  // const error = searchParams?.get("error");
-
-  const [loading, setLoading] = useState(false);
   return (
     <div>
-      <SocialAuth setLoading={setLoading} loading={loading} callbackUrl={callbackUrl} />
+      <LoginContainer />
     </div>
   );
 };

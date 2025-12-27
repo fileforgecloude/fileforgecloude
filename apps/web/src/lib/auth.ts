@@ -69,4 +69,16 @@ export const auth = betterAuth({
   advanced: {
     cookiePrefix: "file_forge",
   },
+  user: {
+    additionalFields: {
+      role: {
+        type: "string",
+        defaultValue: "USER",
+      },
+      banned: {
+        type: "boolean",
+        defaultValue: false,
+      },
+    },
+  },
 });
