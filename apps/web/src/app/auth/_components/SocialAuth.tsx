@@ -23,7 +23,7 @@ const SocialAuth: React.FC<SocialAuthProps> = ({ setLoading, callbackUrl, loadin
       <Button
         type='button'
         variant='outline'
-        className='h-11 border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800/80'
+        className='h-12 cursor-pointer border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800/80'
         onClick={() => socialSignup("google")}
         disabled={loading}
       >
@@ -34,7 +34,7 @@ const SocialAuth: React.FC<SocialAuthProps> = ({ setLoading, callbackUrl, loadin
       <Button
         type='button'
         variant='outline'
-        className='h-11 border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800/80'
+        className='h-12 cursor-pointer border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800/80'
         onClick={() => socialSignup("github")}
         disabled={loading}
       >
