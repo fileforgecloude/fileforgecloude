@@ -1,5 +1,5 @@
-const LandingPage = () => {
-  return <div>landing page </div>;
-};
+import { Button } from "@repo/ui/components/button";
 
-export default LandingPage;
+export default function Page() {
+  return <Button>Click me</Button>;
+}
