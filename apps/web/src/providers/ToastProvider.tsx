@@ -56,7 +56,7 @@ export const ToastProvider = () => {
     <>
       <Toaster
         duration={3000}
-        position='top-right'
+        position='bottom-right'
         toastOptions={{
           unstyled: true,
           classNames: {
