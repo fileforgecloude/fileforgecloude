@@ -1,10 +1,10 @@
 import { ErrorRequestHandler } from "express";
-import config from "src/config";
-import AppError from "src/errors/AppError";
-import handleDuplicateError from "src/errors/handleDuplicateError";
-import handleZodError from "src/errors/handleZodError";
-import { TErrorSources } from "src/interface";
+import { TErrorSources } from "src/app/interface";
 import { ZodError } from "zod";
+import handleZodError from "../errors/handleZodError";
+import handleDuplicateError from "../errors/handleDuplicateError";
+import AppError from "../errors/AppError";
+import { ENV } from "@repo/database";
 
 const globalErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
   //setting default values
@@ -52,7 +52,7 @@ const globalErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
     message,
     errorSources,
     err,
-    stack: config.NODE_ENV === "development" ? err?.stack : null,
+    stack: ENV.node_env === "development" ? err?.stack : null,
   });
 };
 
