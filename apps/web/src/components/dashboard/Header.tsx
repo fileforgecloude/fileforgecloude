@@ -16,7 +16,7 @@ import {
   PanelLeftClose,
   PanelLeftOpen,
 } from "lucide-react";
-import { Breadcrumb } from "./Breadcrumb";
+import { DashboardBreadcrumb } from "./Breadcrumb";
 import { NotificationPopup } from "./NotificationPopup";
 import { CommandSearch } from "./CommandSearch";
 import { useSession, authClient } from "../../lib/auth-client";
@@ -25,6 +25,7 @@ import { cn } from "@repo/ui/lib/utils";
 import { motion, AnimatePresence } from "motion/react";
 import { useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
+import { theme as customTheme } from "@/theme/theme";
 
 const UserMenu = ({ user }: { user: any }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -161,7 +162,7 @@ export function Header() {
   }, []);
 
   return (
-    <header className='h-16 flex items-center justify-between px-6 bg-white dark:bg-neutral-950 border-b border-neutral-200 dark:border-neutral-800 sticky top-0 z-30 transition-colors'>
+    <header className={cn("h-16 flex items-center justify-between px-6 sticky top-0 z-30 transition-colors", customTheme.dashboard_body)}>
       <div className='flex items-center gap-4'>
         {/* Sidebar Toggle (Desktop only) */}
         <button
@@ -171,7 +172,7 @@ export function Header() {
         >
           {isCollapsed ? <PanelLeftOpen size={20} /> : <PanelLeftClose size={20} />}
         </button>
-        <Breadcrumb />
+        <DashboardBreadcrumb />
       </div>
 
       <div className='flex items-center gap-4'>

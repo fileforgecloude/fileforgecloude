@@ -1,11 +1,12 @@
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { sendEmail } from "./mailer";
+import { ENV } from "@repo/database/config";
 import { prisma } from "@repo/database";
 
 export const auth = betterAuth({
-  baseURL: process.env.BETTER_AUTH_URL,
-  trustedOrigins: [process.env.BETTER_AUTH_URL!],
+  baseURL: ENV.better_auth_url!,
+  trustedOrigins: [ENV.better_auth_url!],
   emailAndPassword: {
     enabled: true,
     autoSignIn: true,
@@ -51,12 +52,12 @@ export const auth = betterAuth({
   }),
   socialProviders: {
     google: {
-      clientId: process.env.GOOGLE_CLIENT_ID as string,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
+      clientId: ENV.google_client_id!,
+      clientSecret: ENV.google_client_secret!,
     },
     github: {
-      clientId: process.env.GITHUB_CLIENT_ID as string,
-      clientSecret: process.env.GITHUB_CLIENT_SECRET as string,
+      clientId: ENV.github_client_id!,
+      clientSecret: ENV.github_client_secret!,
     },
   },
   account: {
@@ -65,7 +66,7 @@ export const auth = betterAuth({
       trustedProviders: ["google"],
     },
   },
-  secret: process.env.BETTER_AUTH_SECRET,
+  secret: ENV.better_auth_secret!,
   advanced: {
     cookiePrefix: "file_forge",
   },

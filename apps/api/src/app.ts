@@ -2,9 +2,10 @@ import express, { Application } from "express";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import router from "./app/routes";
-import globalErrorHandler from "./middlewares/globalErrorHandler";
-import notFound from "./middlewares/notFound";
-import requestLogger from "./middlewares/requestLogger";
+import globalErrorHandler from "./app/middlewares/globalErrorHandler";
+import notFound from "./app/middlewares/notFound";
+import requestLogger from "./app/middlewares/requestLogger";
+import { ENV } from "@repo/database/config";
 
 const app: Application = express();
 
@@ -14,7 +15,7 @@ app.use(cookieParser());
 
 app.use(requestLogger);
 
-app.use(cors({ origin: ["http://localhost:3000"], credentials: true }));
+app.use(cors({ origin: [ENV.better_auth_url!], credentials: true }));
 
 // application routes
 app.use("/api/v1", router);

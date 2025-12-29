@@ -49,4 +49,5 @@ model User {
   banReason     String?
   accounts      account[]
   sessions      session[]
+  files         File[]
 }

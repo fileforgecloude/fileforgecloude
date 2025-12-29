@@ -18,7 +18,8 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "../../packages/ui/src/components/Container.tsx"
+    "../../packages/ui/src/components/Container.tsx",
+    "../../packages/database/src/supabase.ts"
   ],
   "exclude": ["node_modules"]
 }

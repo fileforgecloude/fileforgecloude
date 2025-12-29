@@ -2,7 +2,7 @@ import { Server } from "http";
 import chalk from "chalk";
 import app from "./app";
 import { prisma } from "@repo/database";
-import config from "./config";
+import { ENV } from "@repo/database/config";
 
 let server: Server;
 
@@ -14,8 +14,8 @@ async function main() {
 
     console.log(chalk.greenBright("✅ Prisma connected successfully"));
 
-    server = app.listen(config.port, () => {
-      console.log(chalk.bold.green("🚀 API is running"), chalk.gray("→"), chalk.cyan(`http://localhost:${config.port}`));
+    server = app.listen(ENV.server_port!, () => {
+      console.log(chalk.bold.green("🚀 API is running"), chalk.gray("→"), chalk.cyan(`http://localhost:${ENV.server_port}`));
     });
   } catch (error) {
     console.error(chalk.redBright("❌ Failed to start server"), error);

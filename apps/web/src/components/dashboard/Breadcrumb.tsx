@@ -3,36 +3,59 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ChevronRight, Home } from "lucide-react";
+
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@repo/ui/components/breadcrumb";
 import React from "react";
 
-export function Breadcrumb() {
+export function DashboardBreadcrumb() {
   const pathname = usePathname();
-  const pathSegments = pathname.split("/").filter((segment) => segment !== "");
+  const segments = pathname.split("/").filter(Boolean);
 
   return (
-    <nav className='flex items-center space-x-2 text-sm text-neutral-500 dark:text-neutral-400'>
-      <Link href='/dashboard' className='flex items-center hover:text-neutral-900 dark:hover:text-white transition-colors'>
-        <Home className='w-4 h-4 mr-1' />
-        <span>Dashboard</span>
-      </Link>
+    <Breadcrumb>
+      <BreadcrumbList>
+        {/* Home / Dashboard */}
+        <BreadcrumbItem>
+          <BreadcrumbLink asChild>
+            <Link href='/dashboard' className='flex items-center gap-1'>
+              <Home size={15} />
+              <span>Dashboard</span>
+            </Link>
+          </BreadcrumbLink>
+        </BreadcrumbItem>
 
-      {pathSegments.slice(1).map((segment, index) => {
-        const href = `/${pathSegments.slice(0, index + 2).join("/")}`;
-        const isLast = index === pathSegments.length - 2;
+        {segments.slice(1).map((segment, index) => {
+          const href = `/${segments.slice(0, index + 2).join("/")}`;
+          const isLast = index === segments.length - 2;
 
-        return (
-          <React.Fragment key={href}>
-            <ChevronRight className='w-4 h-4' />
-            {isLast ? (
-              <span className='font-medium text-neutral-900 dark:text-white capitalize'>{segment.replace(/-/g, " ")}</span>
-            ) : (
-              <Link href={href} className='hover:text-neutral-900 dark:hover:text-white transition-colors capitalize'>
-                {segment.replace(/-/g, " ")}
-              </Link>
-            )}
-          </React.Fragment>
-        );
-      })}
-    </nav>
+          return (
+            <React.Fragment key={href}>
+              <BreadcrumbSeparator>
+                <ChevronRight size={15} />
+              </BreadcrumbSeparator>
+
+              <BreadcrumbItem>
+                {isLast ? (
+                  <BreadcrumbPage className='capitalize'>{segment.replace(/-/g, " ")}</BreadcrumbPage>
+                ) : (
+                  <BreadcrumbLink asChild>
+                    <Link href={href} className='capitalize'>
+                      {segment.replace(/-/g, " ")}
+                    </Link>
+                  </BreadcrumbLink>
+                )}
+              </BreadcrumbItem>
+            </React.Fragment>
+          );
+        })}
+      </BreadcrumbList>
+    </Breadcrumb>
   );
 }

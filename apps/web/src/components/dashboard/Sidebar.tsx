@@ -10,6 +10,7 @@ import { cn } from "@repo/ui/lib/utils";
 import { motion, AnimatePresence } from "motion/react";
 import { Drawer } from "vaul";
 import { useSidebar } from "./SidebarContext";
+import { theme } from "@/theme/theme";
 
 interface SidebarProps {
   className?: string;
@@ -169,7 +170,7 @@ export function Sidebar({ className }: SidebarProps) {
   };
 
   const SidebarContent = ({ onNavigate }: { onNavigate?: () => void }) => (
-    <div className='flex flex-col h-full bg-white dark:bg-neutral-950 overflow-x-hidden'>
+    <div className={cn("flex flex-col h-full overflow-x-hidden", theme.dashboard_body)}>
       <div
         className={cn(
           "h-16 flex items-center px-6 border-b border-neutral-100 dark:border-neutral-900",
@@ -219,7 +220,7 @@ export function Sidebar({ className }: SidebarProps) {
           </Drawer.Trigger>
           <Drawer.Portal>
             <Drawer.Overlay className='fixed inset-0 bg-black/40 dark:bg-black/60 z-50 backdrop-blur-[2px]' />
-            <Drawer.Content className='bg-white dark:bg-neutral-950 flex flex-col rounded-r-2xl h-full w-[280px] fixed bottom-0 left-0 z-50 outline-none'>
+            <Drawer.Content className='bg-white dark:bg-[#131313] flex flex-col rounded-r-2xl h-full w-[75vw] fixed bottom-0 left-0 z-50 outline-none'>
               <SidebarContent onNavigate={() => {}} />
             </Drawer.Content>
           </Drawer.Portal>
@@ -234,10 +235,7 @@ export function Sidebar({ className }: SidebarProps) {
           collapsed: { width: "70px" },
         }}
         transition={{ type: "spring", damping: 25, stiffness: 120 }}
-        className={cn(
-          "fixed top-0 left-0 z-40 h-screen bg-white dark:bg-neutral-950 border-r border-neutral-200 dark:border-neutral-800 flex flex-col hidden lg:flex overflow-x-hidden",
-          className
-        )}
+        className={cn("fixed top-0 left-0 z-40 h-screen bg-white dark:bg-[#131313] flex-col hidden lg:flex overflow-x-hidden", className)}
       >
         <SidebarContent />
       </motion.aside>
