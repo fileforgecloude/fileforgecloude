@@ -1,22 +1,10 @@
-import {
-  LayoutDashboard,
-  Users,
-  Settings,
-  FileText,
-  ShieldCheck,
-  CreditCard,
-  History,
-  FolderOpen,
-  UserCog,
-  ShieldAlert,
-} from "lucide-react";
+import { LayoutDashboard, Folder, Trash2, Star, FileText, UploadCloud, Users, Settings, Clock } from "lucide-react";
 
 export interface NavItem {
   title: string;
   href: string;
   icon: any;
   roles?: string[];
-  children?: NavItem[];
 }
 
 export const dashboardRoutes: NavItem[] = [
@@ -27,51 +15,40 @@ export const dashboardRoutes: NavItem[] = [
     roles: ["USER", "ADMIN"],
   },
   {
-    title: "Storage",
+    title: "My Files",
     href: "/dashboard/files",
-    icon: FolderOpen,
-    roles: ["USER", "ADMIN"],
-    children: [
-      {
-        title: "All Files",
-        href: "/dashboard/files",
-        icon: FileText,
-      },
-      {
-        title: "Recent",
-        href: "/dashboard/files/recent",
-        icon: History,
-      },
-    ],
-  },
-  {
-    title: "Billing",
-    href: "/dashboard/billing",
-    icon: CreditCard,
+    icon: Folder,
     roles: ["USER", "ADMIN"],
   },
   {
-    title: "Admin Panel",
-    href: "/dashboard/admin",
-    icon: ShieldCheck,
-    roles: ["ADMIN"],
-    children: [
-      {
-        title: "User Management",
-        href: "/dashboard/admin/users",
-        icon: Users,
-      },
-      {
-        title: "Roles & Permissions",
-        href: "/dashboard/admin/permissions",
-        icon: UserCog,
-      },
-      {
-        title: "System Logs",
-        href: "/dashboard/admin/logs",
-        icon: ShieldAlert,
-      },
-    ],
+    title: "Recent",
+    href: "/dashboard/files/recent",
+    icon: Clock,
+    roles: ["USER", "ADMIN"],
+  },
+  {
+    title: "Starred",
+    href: "/dashboard/files/starred",
+    icon: Star,
+    roles: ["USER", "ADMIN"],
+  },
+  {
+    title: "Uploads",
+    href: "/dashboard/files/uploads",
+    icon: UploadCloud,
+    roles: ["USER", "ADMIN"],
+  },
+  {
+    title: "Trash",
+    href: "/dashboard/files/trash",
+    icon: Trash2,
+    roles: ["USER", "ADMIN"],
+  },
+  {
+    title: "Shared with Me",
+    href: "/dashboard/shared",
+    icon: Users,
+    roles: ["USER", "ADMIN"],
   },
   {
     title: "Settings",
