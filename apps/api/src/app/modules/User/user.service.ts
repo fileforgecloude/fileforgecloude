@@ -7,7 +7,7 @@ const createUserIntoDB = async (data: any) => {
   });
   return result;
 };
-
+// get all users from db
 const getUsersFormDB = async () => {
   const result = await prisma.user.findMany({
     include: {
@@ -16,8 +16,17 @@ const getUsersFormDB = async () => {
   });
   return result;
 };
+const deleteUserFromDB = async (id: string) => {
+  const result = await prisma.user.delete({
+    where: {
+      id,
+    },
+  });
+  return result;
+};
 
 export const UserServices = {
   getUsersFormDB,
   createUserIntoDB,
+  deleteUserFromDB,
 };
