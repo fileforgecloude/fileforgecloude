@@ -11,8 +11,16 @@ export type FileMetadata = {
   updatedAt?: string;
 };
 
-export const getFiles = async (userId: string) => {
-  const response = await axiosInstance.get(`/files?userId=${userId}`);
+type UseFilesParams = {
+  search?: string;
+  type?: string;
+  sort?: string;
+  userId: string;
+};
+
+export const getFiles = async (params: UseFilesParams) => {
+  const query = new URLSearchParams(Object.entries(params).filter(([, v]) => v) as any).toString();
+  const response = await axiosInstance.get(`/files?${query}`);
   return response.data.data;
 };
 

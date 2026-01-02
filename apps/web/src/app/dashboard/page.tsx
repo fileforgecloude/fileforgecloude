@@ -1,50 +1,51 @@
 "use client";
 
-import React, { useState, useRef, useEffect, useMemo } from "react";
-import { FileGrid, FileList, type DriveFile } from "./_components/file-list";
-import { Loader2, UploadCloud } from "lucide-react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
+import { UploadCloud } from "lucide-react";
 import { Button } from "@repo/ui/components/button";
 import { toast } from "sonner";
 import { useSession } from "@/lib/auth-client";
-import { useCreateFile, useDeleteFile, useFiles } from "@/react-query/files/file-actions";
-import { deleteFileFromStorage, uploadFileToStorage } from "@/lib/storage";
-import { DashboardHeader } from "../../components/layouts/dashboard-header";
-import { FilterBar } from "./_components/filter-bar";
-import { ListSkeleton } from "./_components/file-skeleton";
-import { ConfirmationDialog } from "../../components/ui/confirmation-dialog";
+import { useCreateFile, useFiles } from "@/react-query/files/file-actions";
+import { uploadFileToStorage } from "@/lib/storage";
+import { DashboardHeader } from "@/components/layouts/dashboard-header";
+import { FilterBar } from "@/components/files/filter-bar";
+import { ListSkeleton } from "@/components/files/file-skeleton";
+import { FileGrid, FileList } from "@/components/files/file-list";
+import { useUrlQuery } from "@/hooks/useUrlQuery";
+import { useDebounce } from "@/hooks/useDebounce";
 
 const VIEW_STORAGE_KEY = "dashboard-view";
 
 const UserDashboard = () => {
   const [view, setView] = useState<"grid" | "list">("grid");
-  const [searchQuery, setSearchQuery] = useState("");
-  const [filterType, setFilterType] = useState("");
-  const [sortBy, setSortBy] = useState("modified");
+  const { searchParams, setQuery } = useUrlQuery();
 
-  // Delete Dialog State
-  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-  const [fileToDelete, setFileToDelete] = useState<DriveFile | null>(null);
-  const [isDeleting, setIsDeleting] = useState(false);
+  const [searchQuery, setSearchQuery] = useState(searchParams.get("search") || "");
+  const [filterType, setFilterType] = useState(searchParams.get("type") || "");
+  const [sortBy, setSortBy] = useState(searchParams.get("sort") || "modified");
+  const debouncedSearch = useDebounce(searchQuery, 500);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { data: session } = useSession();
 
-  // Load view preference from localStorage
   useEffect(() => {
     const savedView = localStorage.getItem(VIEW_STORAGE_KEY) as "grid" | "list";
     if (savedView) setView(savedView);
   }, []);
 
-  // Save view preference to localStorage
   const handleViewChange = (newView: "grid" | "list") => {
     setView(newView);
     localStorage.setItem(VIEW_STORAGE_KEY, newView);
   };
 
   // TanStack Query Hooks
-  const { data: files = [], isLoading } = useFiles(session?.user?.id);
+  const { data: files = [], isLoading } = useFiles({
+    search: debouncedSearch,
+    type: filterType,
+    sort: sortBy,
+    userId: session?.user?.id || "",
+  });
   const createFileMutation = useCreateFile();
-  const deleteFileMutation = useDeleteFile();
 
   const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -74,77 +75,29 @@ const UserDashboard = () => {
     }
   };
 
-  const handleAction = async (action: string, file: DriveFile) => {
-    if (action === "delete") {
-      setFileToDelete(file);
-      setIsDeleteDialogOpen(true);
-    } else if (action === "get-link") {
-      navigator.clipboard.writeText(file.url);
-      toast.success("Link copied to clipboard");
-    } else if (action === "download") {
-      window.open(file.url, "_blank");
-    }
-  };
+  const handleSearchChange = useCallback(
+    (value: string) => {
+      setSearchQuery(value);
+      setQuery("search", value || undefined);
+    },
+    [setQuery]
+  );
 
-  const handleDeleteConfirm = async () => {
-    if (!fileToDelete || !session?.user?.id) return;
+  const handleFilterChange = useCallback(
+    (type: string) => {
+      setFilterType(type);
+      setQuery("type", type || undefined);
+    },
+    [setQuery]
+  );
 
-    setIsDeleting(true);
-    const toastId = toast.loading("Deleting file...");
-
-    try {
-      await deleteFileFromStorage(fileToDelete.key);
-      await deleteFileMutation.mutateAsync({
-        id: fileToDelete.id,
-        userId: session.user.id,
-      });
-      toast.success("File deleted successfully", { id: toastId });
-      setIsDeleteDialogOpen(false);
-      setFileToDelete(null);
-    } catch (error: any) {
-      toast.error(error.message || "Failed to delete file", { id: toastId });
-    } finally {
-      setIsDeleting(false);
-    }
-  };
-
-  const driveFiles: DriveFile[] = useMemo(() => {
-    let result = Array.isArray(files)
-      ? files.map((f: any) => ({
-          id: f.id,
-          name: f.name,
-          size: f.size,
-          type: f.type,
-          url: f.url,
-          key: f.key,
-          updatedAt: f.updatedAt || new Date().toISOString(),
-        }))
-      : [];
-
-    // Filter by search query
-    if (searchQuery) {
-      result = result.filter((file) => file.name.toLowerCase().includes(searchQuery.toLowerCase()));
-    }
-
-    // Filter by type
-    if (filterType) {
-      result = result.filter((file) => {
-        if (filterType === "image") return file.type.startsWith("image/");
-        if (filterType === "pdf") return file.type.includes("pdf");
-        if (filterType === "code")
-          return file.type.includes("typescript") || file.type.includes("javascript") || file.type.includes("json");
-        return true;
-      });
-    }
-
-    // Sort
-    result.sort((a, b) => {
-      if (sortBy === "name") return a.name.localeCompare(b.name);
-      return new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime();
-    });
-
-    return result;
-  }, [files, searchQuery, filterType, sortBy]);
+  const handleSortChange = useCallback(
+    (sort: string) => {
+      setSortBy(sort);
+      setQuery("sort", sort);
+    },
+    [setQuery]
+  );
 
   return (
     <div className=''>
@@ -152,16 +105,16 @@ const UserDashboard = () => {
         onUploadClick={() => fileInputRef.current?.click()}
         onCreateFolderClick={() => toast.info("Folder creation coming soon!")}
         searchQuery={searchQuery}
-        onSearchChange={setSearchQuery}
+        onSearchChange={handleSearchChange}
       />
 
       <FilterBar
         view={view}
         onViewChange={handleViewChange}
         filterType={filterType}
-        onFilterTypeChange={setFilterType}
+        onFilterTypeChange={handleFilterChange}
         sortBy={sortBy}
-        onSortChange={setSortBy}
+        onSortChange={handleSortChange}
       />
 
       <input type='file' ref={fileInputRef} onChange={handleUpload} className='hidden' />
@@ -170,7 +123,7 @@ const UserDashboard = () => {
         <div className='animate-in fade-in duration-500'>
           <ListSkeleton />
         </div>
-      ) : driveFiles.length === 0 ? (
+      ) : files.length === 0 ? (
         <div className='h-[60vh] flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 border-2 border-dashed border-slate-200 dark:border-[#333] rounded-[40px] bg-slate-50/50 dark:bg-[#131313]/50 transition-all'>
           <div className='p-8 bg-white dark:bg-[#1E1E1E] rounded-full shadow-lg mb-6 border dark:border-[#333] scale-110 group-hover:scale-125 transition-transform'>
             <UploadCloud className='w-16 h-16 text-blue-500 dark:text-blue-400 opacity-60' />
@@ -190,29 +143,9 @@ const UserDashboard = () => {
         </div>
       ) : (
         <div className='animate-in fade-in slide-in-from-bottom-4 duration-500'>
-          {view === "grid" ? (
-            <FileGrid files={driveFiles} onAction={handleAction} />
-          ) : (
-            <FileList files={driveFiles} onAction={handleAction} />
-          )}
+          {view === "grid" ? <FileGrid files={files} /> : <FileList files={files} />}
         </div>
       )}
-
-      <ConfirmationDialog
-        isOpen={isDeleteDialogOpen}
-        onClose={() => setIsDeleteDialogOpen(false)}
-        onConfirm={handleDeleteConfirm}
-        title='Delete File?'
-        description={
-          <>
-            Are you sure you want to delete <span className='font-bold text-slate-800 dark:text-slate-200'>"{fileToDelete?.name}"</span>?
-            This action cannot be undone.
-          </>
-        }
-        confirmText='Delete'
-        isLoading={isDeleting}
-        variant='destructive'
-      />
     </div>
   );
 };

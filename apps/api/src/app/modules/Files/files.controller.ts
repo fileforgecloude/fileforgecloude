@@ -15,11 +15,16 @@ const createFile = async (req: Request, res: Response) => {
 };
 
 const getFiles = async (req: Request, res: Response) => {
-  const { userId } = req.query;
+  const { userId, search, type, sort } = req.query;
   if (!userId) {
     throw new Error("userId is required");
   }
-  const result = await FileService.getFilesFromDB(userId as string);
+  const result = await FileService.getFilesFromDB({
+    userId: userId as string,
+    search: search as string,
+    type: type as "image" | "pdf" | "code",
+    sort: sort as "name" | "modified",
+  });
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
