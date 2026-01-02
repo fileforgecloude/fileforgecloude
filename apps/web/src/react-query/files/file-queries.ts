@@ -25,3 +25,7 @@ export const deleteFile = async (id: string, userId: string) => {
   const response = await axiosInstance.delete(`/files/${id}?userId=${userId}`);
   return response.data.data;
 };
+export const getUser = async () => {
+  const response = await axiosInstance.get("/users");
+  return response.data.data;
+};

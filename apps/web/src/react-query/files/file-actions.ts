@@ -26,3 +26,10 @@ export const useDeleteFile = () =>
     // successMessage: "File deleted",
     errorMessage: "Failed to delete file",
   });
+export const useUser = () => {
+  return useQuery({
+    queryKey: ["user"],
+    queryFn: () => FileEndpoints.getUser(),
+  });
+};
+console.log(useUser, "user data");
