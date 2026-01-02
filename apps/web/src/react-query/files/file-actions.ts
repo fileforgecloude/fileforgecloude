@@ -3,11 +3,19 @@ import * as FileEndpoints from "./file-queries";
 import { FileMetadata } from "./file-queries";
 import { useAppMutation } from "@/hooks/useAppMutation";
 
-export const useFiles = (userId?: string) => {
+type UseFilesParams = {
+  search?: string;
+  type?: string;
+  sort?: string;
+  userId: string;
+  folderId?: string;
+};
+
+export const useFiles = (params: UseFilesParams) => {
   return useQuery({
-    queryKey: ["files", userId],
-    queryFn: () => FileEndpoints.getFiles(userId!),
-    enabled: !!userId,
+    queryKey: ["files", params],
+    queryFn: () => FileEndpoints.getFiles(params),
+    enabled: !!params.userId,
   });
 };
 
@@ -25,4 +33,11 @@ export const useDeleteFile = () =>
     invalidateKeys: [["files"]],
     // successMessage: "File deleted",
     errorMessage: "Failed to delete file",
+  });
+
+export const useUpdateFile = () =>
+  useAppMutation<{ id: string; userId: string; data: Partial<FileMetadata> }>({
+    mutationFn: ({ id, userId, data }) => FileEndpoints.updateFile(id, userId, data),
+    invalidateKeys: [["files"]],
+    successMessage: "File updated successfully",
   });

@@ -117,12 +117,19 @@
   --color-sidebar-ring: var(--sidebar-ring);
 }
 
+
+/* custom css style  */
+@theme{
+  --font-inter: 'Inter', sans-serif;
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
   }
   body {
     @apply bg-background text-foreground;
+    font-family: var(--font-inter);
   }
 
   .custom-scrollbar::-webkit-scrollbar {
