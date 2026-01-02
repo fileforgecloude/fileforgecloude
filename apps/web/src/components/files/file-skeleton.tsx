@@ -35,7 +35,7 @@ export const ListSkeleton = () => {
         <div className='col-span-1 h-3 bg-slate-200 dark:bg-white/5 rounded-full w-8 ml-auto' />
       </div>
       <div className='flex flex-col'>
-        {[...Array(8)].map((_, i) => (
+        {[...Array(6)].map((_, i) => (
           <div key={i} className='grid grid-cols-12 gap-4 px-6 py-5 items-center border-b dark:border-[#2A2A2A] last:border-0'>
             <div className='col-span-6 flex items-center gap-3'>
               <div className='w-10 h-10 bg-slate-100 dark:bg-white/5 rounded-lg' />

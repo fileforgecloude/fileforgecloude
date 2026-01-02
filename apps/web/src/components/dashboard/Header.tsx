@@ -2,20 +2,7 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import Link from "next/link";
-import {
-  LayoutDashboard,
-  User,
-  LogOut,
-  Settings,
-  ChevronDown,
-  Search,
-  Bell,
-  Sun,
-  Moon,
-  Command,
-  PanelLeftClose,
-  PanelLeftOpen,
-} from "lucide-react";
+import { LayoutDashboard, LogOut, Settings, ChevronDown, Search, Bell, Command, PanelLeftClose, PanelLeftOpen, Trash } from "lucide-react";
 import { DashboardBreadcrumb } from "./Breadcrumb";
 import { NotificationPopup } from "./NotificationPopup";
 import { CommandSearch } from "./CommandSearch";
@@ -24,8 +11,9 @@ import { useSidebar } from "./SidebarContext";
 import { cn } from "@repo/ui/lib/utils";
 import { motion, AnimatePresence } from "motion/react";
 import { useRouter } from "next/navigation";
-import { useTheme } from "next-themes";
 import { theme as customTheme } from "@/theme/theme";
+import { Skeleton } from "@repo/ui/components/skeleton";
+import { useNotifications } from "@/react-query/notifications/notification-actions";
 
 const UserMenu = ({ user }: { user: any }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -55,8 +43,8 @@ const UserMenu = ({ user }: { user: any }) => {
 
   const menuItems = [
     { label: "Dashboard", icon: LayoutDashboard, href: "/dashboard", color: "text-blue-600 dark:text-blue-400" },
-    { label: "Profile", icon: User, href: "/profile", color: "text-purple-600 dark:text-purple-400" },
-    { label: "Settings", icon: Settings, href: "/settings", color: "text-amber-600 dark:text-amber-400" },
+    { label: "Trash", icon: Trash, href: "/dashboard/trash", color: "text-red-600 dark:text-red-400" },
+    { label: "Settings", icon: Settings, href: "/dashboard/settings", color: "text-amber-600 dark:text-amber-400" },
   ];
 
   return (
@@ -133,12 +121,13 @@ const UserMenu = ({ user }: { user: any }) => {
 };
 
 export function Header() {
-  const { data: session } = useSession();
-  const { theme, setTheme } = useTheme();
+  const { data: session, isPending } = useSession();
   const { isCollapsed, toggleSidebar } = useSidebar();
   const [showNotifications, setShowNotifications] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
   const notificationRef = useRef<HTMLDivElement>(null);
+  const userId = session?.user?.id;
+  const { data: notifications = [] } = useNotifications(userId ?? "");
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -197,13 +186,6 @@ export function Header() {
           <Search size={20} />
         </button>
 
-        <button
-          onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-          className='p-2.5 text-neutral-500 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-xl transition-colors'
-        >
-          {theme === "dark" ? <Sun size={20} /> : <Moon size={20} />}
-        </button>
-
         <div className='relative' ref={notificationRef}>
           <button
             onClick={() => setShowNotifications(!showNotifications)}
@@ -213,12 +195,22 @@ export function Header() {
             )}
           >
             <Bell size={20} />
-            <span className='absolute top-3 right-3 w-2 h-2 bg-blue-600 rounded-full border-2 border-white dark:border-neutral-950 shadow-sm' />
+            {notifications.some((n: any) => !n.read) && (
+              <span className='absolute top-3 right-3 w-2 h-2 bg-blue-600 rounded-full border-2 border-white dark:border-neutral-950 shadow-sm' />
+            )}
           </button>
           <AnimatePresence>{showNotifications && <NotificationPopup />}</AnimatePresence>
         </div>
 
-        <div className='pl-4 border-l border-neutral-200 dark:border-neutral-800'>{session?.user && <UserMenu user={session.user} />}</div>
+        {isPending ? (
+          <div className='pl-4 border-l w-[150px] border-neutral-200 dark:border-neutral-800'>
+            <Skeleton className='w-20 h-10 bg-gray-200 dark:bg-gray-800' />
+          </div>
+        ) : (
+          <div className='pl-4 border-l border-neutral-200 dark:border-neutral-800 w-[150px]'>
+            {session?.user && <UserMenu user={session.user} />}
+          </div>
+        )}
       </div>
 
       <AnimatePresence>{showSearch && <CommandSearch isOpen={showSearch} onClose={() => setShowSearch(false)} />}</AnimatePresence>

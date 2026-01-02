@@ -8,6 +8,7 @@ type UseFilesParams = {
   type?: string;
   sort?: string;
   userId: string;
+  folderId?: string;
 };
 
 export const useFiles = (params: UseFilesParams) => {
@@ -32,4 +33,11 @@ export const useDeleteFile = () =>
     invalidateKeys: [["files"]],
     // successMessage: "File deleted",
     errorMessage: "Failed to delete file",
+  });
+
+export const useUpdateFile = () =>
+  useAppMutation<{ id: string; userId: string; data: Partial<FileMetadata> }>({
+    mutationFn: ({ id, userId, data }) => FileEndpoints.updateFile(id, userId, data),
+    invalidateKeys: [["files"]],
+    successMessage: "File updated successfully",
   });
