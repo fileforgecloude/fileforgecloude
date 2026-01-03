@@ -37,17 +37,19 @@ model verification {
 }
 
 model User {
-  id            String    @id
+  id            String         @id
   name          String
-  email         String    @unique
+  email         String         @unique
   emailVerified Boolean
   image         String?
-  role          Role      @default(USER)
-  createdAt     DateTime  @default(now())
+  role          Role           @default(USER)
+  createdAt     DateTime       @default(now())
   updatedAt     DateTime
-  banned        Boolean   @default(false)
+  banned        Boolean        @default(false)
   banReason     String?
   accounts      account[]
   sessions      session[]
   files         File[]
+  folders       Folder[]
+  notifications Notification[]
 }

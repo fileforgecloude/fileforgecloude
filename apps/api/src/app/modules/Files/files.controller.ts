@@ -15,7 +15,7 @@ const createFile = async (req: Request, res: Response) => {
 };
 
 const getFiles = async (req: Request, res: Response) => {
-  const { userId, search, type, sort } = req.query;
+  const { userId, search, type, sort, folderId } = req.query;
   if (!userId) {
     throw new Error("userId is required");
   }
@@ -24,6 +24,7 @@ const getFiles = async (req: Request, res: Response) => {
     search: search as string,
     type: type as "image" | "pdf" | "code",
     sort: sort as "name" | "modified",
+    folderId: folderId as string,
   });
 
   sendResponse(res, {
@@ -50,8 +51,22 @@ const deleteFile = async (req: Request, res: Response) => {
   });
 };
 
+const updateFile = async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const { userId } = req.query;
+  const result = await FileService.updateFileInDB(id, userId as string, req.body);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "File updated successfully",
+    data: result,
+  });
+};
+
 export const FileController = {
   createFile,
   getFiles,
   deleteFile,
+  updateFile,
 };

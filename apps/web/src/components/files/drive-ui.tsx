@@ -1,7 +1,8 @@
 "use client";
 
 import React from "react";
-import { Cloud, File, Folder, Grid, List, Plus, Search, Settings, Star, Trash2, Clock, HardDrive } from "lucide-react";
+import { Cloud, Plus, Search, Settings, Star, Trash2, Clock, HardDrive } from "lucide-react";
+import Link from "next/link";
 import { Button } from "@repo/ui/components/button";
 import { Input } from "@repo/ui/components/input";
 
@@ -72,9 +73,11 @@ export const DriveHeader = () => {
         />
       </div>
       <div className='flex items-center gap-2'>
-        <Button variant='ghost' size='icon' className='rounded-full hover:bg-slate-100 dark:hover:bg-[#1E1E1E]'>
-          <Settings className='w-5 h-5 text-slate-600 dark:text-slate-400' />
-        </Button>
+        <Link href='/dashboard/settings'>
+          <Button variant='ghost' size='icon' className='rounded-full hover:bg-slate-100 dark:hover:bg-[#1E1E1E]'>
+            <Settings className='w-5 h-5 text-slate-600 dark:text-slate-400' />
+          </Button>
+        </Link>
       </div>
     </header>
   );

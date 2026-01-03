@@ -8,6 +8,7 @@ type UseFilesParams = {
   type?: string;
   sort?: string;
   userId: string;
+  folderId?: string;
 };
 
 export const useFiles = (params: UseFilesParams) => {
@@ -33,6 +34,7 @@ export const useDeleteFile = () =>
     // successMessage: "File deleted",
     errorMessage: "Failed to delete file",
   });
+<<<<<<< HEAD
 export const useUser = () => {
   return useQuery({
     queryKey: ["user"],
@@ -40,3 +42,12 @@ export const useUser = () => {
   });
 };
 console.log(useUser, "user data");
+=======
+
+export const useUpdateFile = () =>
+  useAppMutation<{ id: string; userId: string; data: Partial<FileMetadata> }>({
+    mutationFn: ({ id, userId, data }) => FileEndpoints.updateFile(id, userId, data),
+    invalidateKeys: [["files"]],
+    successMessage: "File updated successfully",
+  });
+>>>>>>> origin/dev

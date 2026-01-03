@@ -9,7 +9,6 @@ export const useUrlQuery = () => {
 
   const setQuery = (key: string, value?: string) => {
     const params = new URLSearchParams(searchParams.toString());
-    console.log(params);
 
     if (!value) {
       params.delete(key);
