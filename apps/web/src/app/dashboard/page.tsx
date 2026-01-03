@@ -1,8 +1,7 @@
 "use client";
 
-import React, { useState, useRef, useEffect, useMemo } from "react";
-import { FileGrid, FileList, type DriveFile } from "./_components/file-list";
-import { Loader2, UploadCloud } from "lucide-react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
+import { UploadCloud } from "lucide-react";
 import { Button } from "@repo/ui/components/button";
 import { toast } from "sonner";
 import { useSession } from "@/lib/auth-client";
@@ -16,39 +15,49 @@ import { DashboardHeader } from "../../components/layouts/dashboard-header";
 import { FilterBar } from "./_components/filter-bar";
 import { ListSkeleton } from "./_components/file-skeleton";
 import { ConfirmationDialog } from "../../components/ui/confirmation-dialog";
+import { useCreateFile, useFiles } from "@/react-query/files/file-actions";
+import { uploadFileToStorage } from "@/lib/storage";
+import { DashboardHeader } from "@/components/layouts/dashboard-header";
+import { FilterBar } from "@/components/files/filter-bar";
+import { ListSkeleton } from "@/components/files/file-skeleton";
+import { FileGrid, FileList } from "@/components/files/file-list";
+import { useUrlQuery } from "@/hooks/useUrlQuery";
+import { useDebounce } from "@/hooks/useDebounce";
 
 const VIEW_STORAGE_KEY = "dashboard-view";
 
 const UserDashboard = () => {
   const [view, setView] = useState<"grid" | "list">("grid");
-  const [searchQuery, setSearchQuery] = useState("");
-  const [filterType, setFilterType] = useState("");
-  const [sortBy, setSortBy] = useState("modified");
+  const { searchParams, setQuery } = useUrlQuery();
 
-  // Delete Dialog State
-  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-  const [fileToDelete, setFileToDelete] = useState<DriveFile | null>(null);
-  const [isDeleting, setIsDeleting] = useState(false);
+  const [searchQuery, setSearchQuery] = useState(
+    searchParams.get("search") || ""
+  );
+  const [filterType, setFilterType] = useState(searchParams.get("type") || "");
+  const [sortBy, setSortBy] = useState(searchParams.get("sort") || "modified");
+  const debouncedSearch = useDebounce(searchQuery, 500);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { data: session } = useSession();
 
-  // Load view preference from localStorage
   useEffect(() => {
     const savedView = localStorage.getItem(VIEW_STORAGE_KEY) as "grid" | "list";
     if (savedView) setView(savedView);
   }, []);
 
-  // Save view preference to localStorage
   const handleViewChange = (newView: "grid" | "list") => {
     setView(newView);
     localStorage.setItem(VIEW_STORAGE_KEY, newView);
   };
 
   // TanStack Query Hooks
-  const { data: files = [], isLoading } = useFiles(session?.user?.id);
+  const { data: files = [], isLoading } = useFiles({
+    search: debouncedSearch,
+    type: filterType,
+    sort: sortBy,
+    userId: session?.user?.id || "",
+  });
   const createFileMutation = useCreateFile();
-  const deleteFileMutation = useDeleteFile();
 
   const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -162,16 +171,16 @@ const UserDashboard = () => {
         onUploadClick={() => fileInputRef.current?.click()}
         onCreateFolderClick={() => toast.info("Folder creation coming soon!")}
         searchQuery={searchQuery}
-        onSearchChange={setSearchQuery}
+        onSearchChange={handleSearchChange}
       />
 
       <FilterBar
         view={view}
         onViewChange={handleViewChange}
         filterType={filterType}
-        onFilterTypeChange={setFilterType}
+        onFilterTypeChange={handleFilterChange}
         sortBy={sortBy}
-        onSortChange={setSortBy}
+        onSortChange={handleSortChange}
       />
 
       <input

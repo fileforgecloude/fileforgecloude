@@ -17,7 +17,7 @@ const NavSkeleton = () => (
   </div>
 );
 
-const UserMenu = ({ user }: { user: any }) => {
+const UserMenu = ({ user }: { user: { image?: string | null; name: string; email: string } }) => {
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
@@ -151,10 +151,9 @@ const Navbar = () => {
   }, []);
 
   const navLinks = [
-    { name: "Features", href: "#features" },
-    { name: "Solutions", href: "#solutions" },
-    { name: "Pricing", href: "#pricing" },
-    { name: "About", href: "#about" },
+    { name: "Features", href: "/features" },
+    { name: "Team", href: "/team" },
+    { name: "Contact Us", href: "/contact-us" },
   ];
 
   return (

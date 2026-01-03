@@ -3,11 +3,18 @@ import * as FileEndpoints from "./file-queries";
 import { FileMetadata } from "./file-queries";
 import { useAppMutation } from "@/hooks/useAppMutation";
 
-export const useFiles = (userId?: string) => {
+type UseFilesParams = {
+  search?: string;
+  type?: string;
+  sort?: string;
+  userId: string;
+};
+
+export const useFiles = (params: UseFilesParams) => {
   return useQuery({
-    queryKey: ["files", userId],
-    queryFn: () => FileEndpoints.getFiles(userId!),
-    enabled: !!userId,
+    queryKey: ["files", params],
+    queryFn: () => FileEndpoints.getFiles(params),
+    enabled: !!params.userId,
   });
 };
 
