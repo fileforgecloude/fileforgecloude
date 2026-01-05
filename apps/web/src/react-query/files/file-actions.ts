@@ -34,20 +34,9 @@ export const useDeleteFile = () =>
     // successMessage: "File deleted",
     errorMessage: "Failed to delete file",
   });
-<<<<<<< HEAD
 export const useUser = () => {
   return useQuery({
     queryKey: ["user"],
     queryFn: () => FileEndpoints.getUser(),
   });
 };
-console.log(useUser, "user data");
-=======
-
-export const useUpdateFile = () =>
-  useAppMutation<{ id: string; userId: string; data: Partial<FileMetadata> }>({
-    mutationFn: ({ id, userId, data }) => FileEndpoints.updateFile(id, userId, data),
-    invalidateKeys: [["files"]],
-    successMessage: "File updated successfully",
-  });
->>>>>>> origin/dev

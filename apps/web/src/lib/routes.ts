@@ -1,4 +1,15 @@
-import { LayoutDashboard, Folder, Trash2, Star, FileText, UploadCloud, Users, Settings, Clock } from "lucide-react";
+import {
+  LayoutDashboard,
+  Folder,
+  Trash2,
+  Star,
+  FileText,
+  UploadCloud,
+  Users,
+  Settings,
+  Clock,
+  User,
+} from "lucide-react";
 
 export interface NavItem {
   title: string;
@@ -49,6 +60,12 @@ export const dashboardRoutes: NavItem[] = [
     href: "/dashboard/shared",
     icon: Users,
     roles: ["USER", "ADMIN"],
+  },
+  {
+    title: "All Users",
+    href: "/dashboard/admin/users",
+    icon: Users,
+    roles: ["ADMIN"],
   },
   {
     title: "Settings",

@@ -28,13 +28,17 @@ type UseFoldersParams = {
 };
 
 export const getFiles = async (params: UseFilesParams) => {
-  const query = new URLSearchParams(Object.entries(params).filter(([, v]) => v) as [string, string][]).toString();
+  const query = new URLSearchParams(
+    Object.entries(params).filter(([, v]) => v) as [string, string][]
+  ).toString();
   const response = await axiosInstance.get(`/files?${query}`);
   return response.data.data;
 };
 
 export const getFolders = async (params: UseFoldersParams) => {
-  const query = new URLSearchParams(Object.entries(params).filter(([, v]) => v) as [string, string][]).toString();
+  const query = new URLSearchParams(
+    Object.entries(params).filter(([, v]) => v) as [string, string][]
+  ).toString();
   const response = await axiosInstance.get(`/folders?${query}`);
   return response.data.data;
 };
@@ -48,13 +52,7 @@ export const deleteFile = async (id: string, userId: string) => {
   const response = await axiosInstance.delete(`/files/${id}?userId=${userId}`);
   return response.data.data;
 };
-<<<<<<< HEAD
 export const getUser = async () => {
   const response = await axiosInstance.get("/users");
-=======
-
-export const updateFile = async (id: string, userId: string, data: Partial<FileMetadata>) => {
-  const response = await axiosInstance.patch(`/files/${id}?userId=${userId}`, data);
->>>>>>> origin/dev
   return response.data.data;
 };

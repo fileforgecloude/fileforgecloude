@@ -2,8 +2,10 @@ import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
 import * as FolderEndpoints from "./folder-queries";
 import { FolderMetadata } from "./folder-queries";
 import { useAppMutation } from "@/hooks/useAppMutation";
-import { deleteMultipleFilesFromStorage, moveFileInStorage } from "@/lib/storage";
-import { updateFile } from "../files/file-queries";
+import {
+  deleteMultipleFilesFromStorage,
+  moveFileInStorage,
+} from "@/lib/storage";
 import { toast } from "sonner";
 import { getAuthSession } from "@/lib/sessionAuth";
 
@@ -54,13 +56,24 @@ export const useCreateFolder = () =>
 export const useUpdateFolder = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async ({ id, userId, data }: { id: string; userId: string; data: Partial<FolderMetadata> }) => {
+    mutationFn: async ({
+      id,
+      userId,
+      data,
+    }: {
+      id: string;
+      userId: string;
+      data: Partial<FolderMetadata>;
+    }) => {
       const path = await FolderEndpoints.getFolderPath(id);
-      const oldPathSegments = path.map((f: { slug: string; name: string }) => f.slug || f.name);
+      const oldPathSegments = path.map(
+        (f: { slug: string; name: string }) => f.slug || f.name
+      );
       const oldFolderPath = oldPathSegments.join("/");
       const updateResult = await FolderEndpoints.updateFolder(id, userId, data);
       const newPathSegments = [...oldPathSegments];
-      newPathSegments[newPathSegments.length - 1] = updateResult.slug || updateResult.name;
+      newPathSegments[newPathSegments.length - 1] =
+        updateResult.slug || updateResult.name;
       const newFolderPath = newPathSegments.join("/");
       const files = await FolderEndpoints.getRecursiveFiles(id);
       const { user } = await getAuthSession();
@@ -89,7 +102,9 @@ export const useUpdateFolder = () => {
       toast.success("Folder and files updated successfully");
     },
     onError: (error: Error) => {
-      toast.error((error as any)?.response?.data?.message || "Failed to rename folder");
+      toast.error(
+        (error as any)?.response?.data?.message || "Failed to rename folder"
+      );
     },
   });
 };
@@ -112,7 +127,9 @@ export const useDeleteFolder = () => {
       toast.success("Folder deleted successfully");
     },
     onError: (error: Error) => {
-      toast.error((error as any)?.response?.data?.message || "Failed to delete folder");
+      toast.error(
+        (error as any)?.response?.data?.message || "Failed to delete folder"
+      );
     },
   });
 };
