@@ -1,5 +1,13 @@
-import { prisma } from "@repo/database";
+import { prisma, type Prisma, type User } from "@repo/database";
 
+const createUserIntoDB = async (data: any) => {
+  console.log("hello");
+  const result = await prisma.user.create({
+    data,
+  });
+  return result;
+};
+// get all users from db
 const getUsersFormDB = async () => {
   const result = await prisma.user.findMany({
     include: {
@@ -8,7 +16,17 @@ const getUsersFormDB = async () => {
   });
   return result;
 };
+const deleteUserFromDB = async (id: string) => {
+  const result = await prisma.user.delete({
+    where: {
+      id,
+    },
+  });
+  return result;
+};
 
 export const UserServices = {
   getUsersFormDB,
+  createUserIntoDB,
+  deleteUserFromDB,
 };
