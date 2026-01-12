@@ -1,5 +1,6 @@
 "use client";
 
+import { UserCreateDialogF } from "@/components/dashboard/UserCreateDialogF";
 import { useUser } from "@/react-query/files/file-actions";
 
 const UserPage = () => {
@@ -12,12 +13,32 @@ const UserPage = () => {
   if (isError)
     return <p className="p-6 text-red-600">{(error as Error).message}</p>;
 
+  // testing demo data
+
+  const user = {
+    name: "Sadid Hasan",
+    email: "sadidhasan56+2@gmail.com",
+    emailVerified: false,
+    image: null,
+    role: "USER",
+    createdAt: "2025-12-27T09:11:30.894Z",
+    updatedAt: "2025-12-27T09:11:30.894Z",
+    banned: false,
+    banReason: null,
+    sessions: [
+      /* your sessions here */
+    ],
+  };
+
   return (
     <div>
       <div className="p-4 md:p-6">
-        <h1 className="text-2xl flex justify-center md:text-2xl font-semibold mb-6">
-          User Management
-        </h1>
+        <div className="flex flex-col items-center justify-center md:flex-row md:items-center md:justify-between mb-6">
+          <h1 className="text-2xl md:text-2xl font-semibold mb-6">
+            User Management
+          </h1>
+          <UserCreateDialogF user={user} />
+        </div>
         {/* card */}
 
         {/* ===== Summary Cards ===== */}
