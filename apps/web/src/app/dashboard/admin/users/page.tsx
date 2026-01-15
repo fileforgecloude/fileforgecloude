@@ -14,7 +14,6 @@ const UserPage = () => {
     return <p className="p-6 text-red-600">{(error as Error).message}</p>;
 
   // testing demo data
-
   const user = {
     name: "Sadid Hasan",
     email: "sadidhasan56+2@gmail.com",
@@ -25,9 +24,7 @@ const UserPage = () => {
     updatedAt: "2025-12-27T09:11:30.894Z",
     banned: false,
     banReason: null,
-    sessions: [
-      /* your sessions here */
-    ],
+    sessions: [],
   };
 
   return (
@@ -39,17 +36,14 @@ const UserPage = () => {
           </h1>
           <UserCreateDialogF user={user} />
         </div>
-        {/* card */}
 
-        {/* ===== Summary Cards ===== */}
+        {/* Summary Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
-          {/* Total Users */}
           <div className="border rounded-lg p-4 shadow-sm bg-white">
             <p className="text-sm text-gray-500">Total Users</p>
             <p className="text-2xl font-semibold">{totalUsers}</p>
           </div>
 
-          {/* Active Users */}
           <div className="border rounded-lg p-4 shadow-sm bg-green-50">
             <p className="text-sm text-green-700">Active Users</p>
             <p className="text-2xl font-semibold text-green-700">
@@ -57,14 +51,13 @@ const UserPage = () => {
             </p>
           </div>
 
-          {/* Banned Users */}
           <div className="border rounded-lg p-4 shadow-sm bg-red-50">
             <p className="text-sm text-red-700">Banned Users</p>
             <p className="text-2xl font-semibold text-red-700">{bannedUsers}</p>
           </div>
         </div>
 
-        {/* ================= Mobile Cards ================= */}
+        {/* Mobile Cards */}
         <div className="space-y-4 md:hidden">
           {data?.map((user: any) => (
             <div
@@ -81,6 +74,21 @@ const UserPage = () => {
                 <p className="truncate max-w-full">{user.email}</p>
               </div>
 
+              {/* Verified */}
+              <div>
+                <p className="text-xs text-gray-500">Verified</p>
+                <span
+                  className={`text-xs px-2 py-1 rounded ${
+                    user.emailVerified
+                      ? "bg-green-100 text-green-700"
+                      : "bg-red-100 text-red-700"
+                  }`}
+                >
+                  {user.emailVerified ? "Verified" : "Unverified"}
+                </span>
+              </div>
+
+              {/* Role + Status */}
               <div className="flex justify-between">
                 <span className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded capitalize">
                   {user.role}
@@ -97,11 +105,17 @@ const UserPage = () => {
                 </span>
               </div>
 
-              {user.isBanned && (
-                <p className="text-xs text-gray-500 truncate">
-                  Reason: {user.banReason ?? "N/A"}
-                </p>
-              )}
+              {/* Ban Status */}
+              <div>
+                <p className="text-xs text-gray-500">Ban Status</p>
+                {user.isBanned ? (
+                  <span className="text-xs px-2 py-1 rounded bg-red-100 text-red-700">
+                    Ban
+                  </span>
+                ) : (
+                  <span className="text-xs text-gray-600">—</span>
+                )}
+              </div>
 
               <div className="flex gap-2">
                 <button className="flex-1 bg-blue-600 text-white text-xs py-2 rounded">
@@ -115,16 +129,19 @@ const UserPage = () => {
           ))}
         </div>
 
-        {/* ================= Desktop Table ================= */}
+        {/* Desktop Table */}
         <div className="hidden md:block overflow-x-auto border rounded-lg shadow-sm">
           <table className="min-w-full text-sm">
             <thead className="bg-gray-100 text-gray-700 text-xs uppercase">
               <tr>
                 <th className="px-4 py-3 text-left">Name</th>
                 <th className="px-4 py-3 text-left">Email</th>
+                <th className="px-4 py-3 text-left">Verified</th>
                 <th className="px-4 py-3 text-left">Role</th>
                 <th className="px-4 py-3 text-center">Status</th>
-                <th className="px-4 py-3 text-left">Ban Reason</th>
+                <th className="px-4 py-3 whitespace-nowrap text-left">
+                  Ban Reason
+                </th>
                 <th className="px-4 py-3 text-center">Action</th>
               </tr>
             </thead>
@@ -136,12 +153,24 @@ const UserPage = () => {
                     {user.name ?? "N/A"}
                   </td>
 
-                  {/* Email truncate */}
                   <td
                     className="px-4 py-3 max-w-[220px] truncate"
                     title={user.email}
                   >
                     {user.email}
+                  </td>
+
+                  {/* Verified */}
+                  <td className="px-4 py-3">
+                    <span
+                      className={`px-2 py-1 rounded text-xs ${
+                        user.emailVerified
+                          ? "bg-green-100 text-green-700"
+                          : "bg-red-100 text-red-700"
+                      }`}
+                    >
+                      {user.emailVerified ? "Verified" : "Unverified"}
+                    </span>
                   </td>
 
                   <td className="px-4 py-3 capitalize">
@@ -162,12 +191,15 @@ const UserPage = () => {
                     </span>
                   </td>
 
-                  {/* Ban reason truncate */}
-                  <td
-                    className="px-4 py-3 max-w-[200px] truncate text-gray-600"
-                    title={user.banReason}
-                  >
-                    {user.banReason ?? "—"}
+                  {/* Ban Status (Ban in red if banned) */}
+                  <td className="px-4 py-3">
+                    {user.isBanned ? (
+                      <span className="px-2 py-1 text-xs rounded bg-red-100 text-red-700">
+                        Ban
+                      </span>
+                    ) : (
+                      <span className="text-gray-600 text-xs">—</span>
+                    )}
                   </td>
 
                   <td className="px-4 py-3 text-center">

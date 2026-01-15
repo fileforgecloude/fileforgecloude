@@ -139,7 +139,7 @@ export function UserCreateDialogF({ user }: { user: UserType }) {
           </div> */}
 
           {/* Sessions */}
-          <div className="mt-4">
+          {/* <div className="mt-4">
             <Label className="font-semibold">Active Sessions</Label>
             <div className="space-y-3 mt-2">
               {user.sessions.length === 0 ? (
@@ -160,7 +160,7 @@ export function UserCreateDialogF({ user }: { user: UserType }) {
                 ))
               )}
             </div>
-          </div>
+          </div> */}
 
           <DialogFooter className="mt-4">
             <DialogClose asChild>
