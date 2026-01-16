@@ -1,7 +1,7 @@
 import { prisma, type Prisma, type User } from "@repo/database";
 
 const createUserIntoDB = async (data: any) => {
-  console.log("hello");
+  // console.log("hello");
   const result = await prisma.user.create({
     data,
   });
@@ -16,12 +16,15 @@ const getUsersFormDB = async () => {
   });
   return result;
 };
-const deleteUserFromDB = async (id: string) => {
-  const result = await prisma.user.delete({
-    where: {
-      id,
-    },
+export const deleteUserFromDB = async (id: string) => {
+  const result = await prisma.user.deleteMany({
+    where: { id },
   });
+
+  if (result.count === 0) {
+    throw new Error("User not found");
+  }
+
   return result;
 };
 

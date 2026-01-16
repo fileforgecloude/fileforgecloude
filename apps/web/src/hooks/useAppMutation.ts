@@ -1,3 +1,5 @@
+"use client";
+
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
@@ -8,7 +10,12 @@ type MutationOptions<TData> = {
   errorMessage?: string;
 };
 
-export function useAppMutation<TData>({ mutationFn, invalidateKeys = [], successMessage, errorMessage }: MutationOptions<TData>) {
+export function useAppMutation<TData>({
+  mutationFn,
+  invalidateKeys = [],
+  successMessage,
+  errorMessage,
+}: MutationOptions<TData>) {
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -21,7 +28,9 @@ export function useAppMutation<TData>({ mutationFn, invalidateKeys = [], success
       if (successMessage) toast.success(successMessage);
     },
     onError: (error: any) => {
-      toast.error(error?.response?.data?.message || errorMessage || "Something went wrong");
+      toast.error(
+        error?.response?.data?.message || errorMessage || "Something went wrong"
+      );
     },
   });
 }

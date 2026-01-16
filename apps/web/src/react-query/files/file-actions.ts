@@ -38,5 +38,15 @@ export const useUser = () => {
   return useQuery({
     queryKey: ["user"],
     queryFn: () => FileEndpoints.getUser(),
+    refetchOnWindowFocus: true,
+    refetchOnReconnect: true,
+    staleTime: 0,
   });
 };
+
+export const useDeleteUser = () =>
+  useAppMutation<{ id: string }>({
+    mutationFn: ({ id }) => FileEndpoints.deleteUser(id),
+    invalidateKeys: [["user"]],
+    errorMessage: "Failed to delete user",
+  });

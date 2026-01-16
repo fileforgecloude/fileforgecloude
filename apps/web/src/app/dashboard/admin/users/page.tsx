@@ -1,14 +1,14 @@
 "use client";
 
 import { UserCreateDialogF } from "@/components/dashboard/UserCreateDialogF";
-import { useUser } from "@/react-query/files/file-actions";
+import { useDeleteUser, useUser } from "@/react-query/files/file-actions";
 
 const UserPage = () => {
   const { data, isLoading, isError, error } = useUser();
   const totalUsers = data?.length ?? 0;
   const activeUsers = data?.filter((u: any) => !u.isBanned).length ?? 0;
   const bannedUsers = data?.filter((u: any) => u.isBanned).length ?? 0;
-
+  const deleteUser = useDeleteUser();
   if (isLoading) return <p className="p-6">Loading...</p>;
   if (isError)
     return <p className="p-6 text-red-600">{(error as Error).message}</p>;
@@ -26,7 +26,7 @@ const UserPage = () => {
     banReason: null,
     sessions: [],
   };
-
+  // const deleteUser = useDeleteUser();
   return (
     <div>
       <div className="p-4 md:p-6">
@@ -121,7 +121,10 @@ const UserPage = () => {
                 <button className="flex-1 bg-blue-600 text-white text-xs py-2 rounded">
                   Update
                 </button>
-                <button className="flex-1 bg-red-600 text-white text-xs py-2 rounded">
+                <button
+                  onClick={() => deleteUser.mutate({ id: "user_002" })}
+                  className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded text-xs"
+                >
                   Delete
                 </button>
               </div>
@@ -207,7 +210,10 @@ const UserPage = () => {
                       <button className="bg-gray-200 hover:bg-gray-300 px-3 py-1 rounded text-xs">
                         Update
                       </button>
-                      <button className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded text-xs">
+                      <button
+                        onClick={() => deleteUser.mutate({ id: user?.id })}
+                        className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded text-xs"
+                      >
                         Delete
                       </button>
                     </div>

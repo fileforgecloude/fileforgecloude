@@ -1,3 +1,4 @@
+import axios from "@/lib/axios";
 import axiosInstance from "@/lib/axios";
 
 export type FileMetadata = {
@@ -55,4 +56,10 @@ export const deleteFile = async (id: string, userId: string) => {
 export const getUser = async () => {
   const response = await axiosInstance.get("/users");
   return response.data.data;
+};
+
+export const deleteUser = async (id: string) => {
+  // Ensure URL matches your backend
+  const response = await axiosInstance.delete(`/users/${id}`);
+  return response.data;
 };
