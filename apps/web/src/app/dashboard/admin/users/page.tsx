@@ -14,17 +14,18 @@ const UserPage = () => {
     return <p className="p-6 text-red-600">{(error as Error).message}</p>;
 
   // testing demo data
+  const isoString = new Date().toISOString();
   const user = {
     name: "Sadid Hasan",
     email: "sadidhasan56+2@gmail.com",
     emailVerified: false,
     image: null,
     role: "USER",
-    createdAt: "2025-12-27T09:11:30.894Z",
-    updatedAt: "2025-12-27T09:11:30.894Z",
+    createdAt: isoString,
+    updatedAt: isoString,
     banned: false,
     banReason: null,
-    sessions: [],
+    // sessions: [],
   };
   // const deleteUser = useDeleteUser();
   return (

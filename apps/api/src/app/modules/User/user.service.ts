@@ -1,7 +1,7 @@
 import { prisma, type Prisma, type User } from "@repo/database";
 
 const createUserIntoDB = async (data: any) => {
-  // console.log("hello");
+  console.log("data user ", data);
   const result = await prisma.user.create({
     data,
   });

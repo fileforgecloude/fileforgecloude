@@ -4,7 +4,7 @@ export interface ISession {
   id: string;
   token: string;
   createdAt: string;
-  updatedAt: string;
+  updatedAt?: string;
   expiresAt: string;
   ipAddress?: string | null;
   userAgent?: string | null;
@@ -35,8 +35,8 @@ export interface IUser {
   emailVerified: boolean;
   image?: string | null;
   role: Role;
-  createdAt: string;
-  updatedAt: string;
+  createdAt?: string;
+  updatedAt?: string;
   banned: boolean;
   banReason?: string | null;
   accounts: IAccount[];

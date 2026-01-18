@@ -38,16 +38,32 @@ type UserType = {
   banReason: string | null;
   sessions: SessionType[];
 };
-
+const id = crypto.randomUUID();
 export function UserCreateDialogF({ user }: { user: UserType }) {
   const [form, setForm] = useState({
+    id: id,
     name: user.name,
     email: user.email,
     image: user.image,
     role: user.role,
+    emailVerified: false,
+    updatedAt: new Date().toISOString(),
     banned: user.banned,
     banReason: user.banReason ?? "",
   });
+
+  // {
+  //   "id":
+
+  //   "emailVerified": false,
+
+  //   "updatedAt": "2025-12-31T00:00:00.000Z",
+  //   "banned": false,
+  //   "banReason": null,
+  //   "accounts": { "create": [] },
+  //   "sessions": { "create": [] },
+  //   "files": { "create": [] }
+  // }
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     const { name, value } = e.target;
@@ -117,51 +133,6 @@ export function UserCreateDialogF({ user }: { user: UserType }) {
               placeholder="USER or ADMIN"
             />
           </div>
-
-          {/* <div className="grid gap-2">
-            <Label>Banned</Label>
-            <Input
-              name="banned"
-              value={String(form.banned)}
-              onChange={handleChange}
-              placeholder="true / false"
-            />
-          </div> */}
-
-          {/* <div className="grid gap-2">
-            <Label>Ban Reason</Label>
-            <Input
-              name="banReason"
-              value={form.banReason}
-              onChange={handleChange}
-              placeholder="Optional"
-            />
-          </div> */}
-
-          {/* Sessions */}
-          {/* <div className="mt-4">
-            <Label className="font-semibold">Active Sessions</Label>
-            <div className="space-y-3 mt-2">
-              {user.sessions.length === 0 ? (
-                <div>No active sessions</div>
-              ) : (
-                user.sessions.map((session) => (
-                  <div
-                    key={session.id}
-                    className="border rounded p-2 text-sm space-y-1"
-                  >
-                    <div>ID: {session.id}</div>
-                    <div>IP: {session.ipAddress}</div>
-                    <div>User Agent: {session.userAgent}</div>
-                    <div>
-                      Expires: {new Date(session.expiresAt).toLocaleString()}
-                    </div>
-                  </div>
-                ))
-              )}
-            </div>
-          </div> */}
-
           <DialogFooter className="mt-4">
             <DialogClose asChild>
               <Button variant="outline">Close</Button>
